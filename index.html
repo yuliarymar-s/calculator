@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Time Calculator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <div id="welcome-screen" class="welcome-screen">
+        <div class="welcome-content">
+            <h1 class="welcome-title"><i class="ri-time-line"></i> Welcome to the Futuristic Time Calculator</h1>
+            <p class="welcome-text">This is a modern tool for tracking time spent on social media.</p>
+            <button onclick="startCalculator()" class="continue-btn"><i class="ri-arrow-right-line"></i>
+                Continue</button>
+        </div>
+    </div>
+
+    <div id="calculator-container" class="container" style="display: none;">
+        <h1><i class="ri-time-line"></i> Time Calculator</h1>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('calc')"><i class="ri-calculator-line"></i>
+                Calculator</button>
+            <button class="tab-btn" onclick="showTab('goals')"><i class="ri-flag-line"></i> Goals</button>
+            <button class="tab-btn" onclick="showTab('stats')"><i class="ri-bar-chart-line"></i> Statistics</button>
+            <button class="tab-btn" onclick="showTab('habits')"><i class="ri-hotel-line"></i> Habits</button>
+            <button class="tab-btn" onclick="showTab('advice')"><i class="ri-lightbulb-line"></i> Advice</button>
+            <button class="tab-btn" onclick="showTab('profile')"><i class="ri-user-line"></i> Profile</button>
+            <button class="tab-btn" onclick="showTab('settings')"><i class="ri-settings-5-line"></i> Settings</button>
+        </div>
+
+        <!-- Calculator -->
+        <div id="calc" class="tab-content active">
+            <div class="input-group">
+                <label for="socialMedia"><i class="ri-global-line"></i> Social Media:</label>
+                <select id="socialMedia">
+                    <option value="instagram">Instagram</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="telegram">Telegram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="snapchat">Snapchat</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="hours"><i class="ri-timer-line"></i> Hours per Day:</label>
+                <input type="number" id="hours" step="0.1" min="0" placeholder="E.g., 2">
+            </div>
+            <div class="button-group">
+                <button onclick="calculateTime()" class="action-btn"><i class="ri-play-line"></i> Calculate</button>
+                <button onclick="clearCalc()" class="action-btn"><i class="ri-delete-bin-line"></i> Clear</button>
+            </div>
+            <div class="input-group">
+                <label><i class="ri-calendar-line"></i> Manual Time Calculation:</label>
+                <input type="date" id="calcDate" value="">
+                <input type="number" id="manualHours" step="0.1" min="0" placeholder="Hours">
+                <input type="number" id="subtractHours" step="0.1" min="0" placeholder="Subtract">
+                <input type="number" id="multiplyFactor" step="0.1" min="0" placeholder="Multiply by">
+            </div>
+            <div class="button-group">
+                <button onclick="addManualTime()" class="action-btn"><i class="ri-add-line"></i> Add</button>
+                <button onclick="subtractTime()" class="action-btn"><i class="ri-subtract-line"></i> Subtract</button>
+                <button onclick="multiplyTime()" class="action-btn"><i class="ri-multiply-line"></i> Multiply</button>
+                <button onclick="calculateManualTime()" class="action-btn"><i class="ri-calculator-line"></i>
+                    Calculate</button>
+                <button onclick="saveManualTime()" class="action-btn"><i class="ri-save-line"></i> Save</button>
+                <button onclick="cancelManualTime()" class="action-btn"><i class="ri-close-line"></i> Cancel</button>
+                <button onclick="copyManualResult()" class="action-btn"><i class="ri-clipboard-line"></i> Copy</button>
+            </div>
+            <div id="manualResult" class="result-box"></div>
+            <div id="result" class="result-box"></div>
+            <div class="chart-container">
+                <button class="chart-toggle" onclick="toggleCalcChart('pie')"><i class="ri-pie-chart-line"></i></button>
+                <button class="chart-toggle" onclick="toggleCalcChart('bar')"><i
+                        class="ri-bar-chart-2-line"></i></button>
+                <canvas id="calcPieChart"></canvas>
+                <canvas id="calcBarChart" style="display: none;"></canvas>
+            </div>
+        </div>
+
+        <!-- Goals -->
+        <div id="goals" class="tab-content">
+            <div class="input-group">
+                <label for="goalMedia"><i class="ri-global-line"></i> Social Media for Goal:</label>
+                <select id="goalMedia">
+                    <option value="instagram">Instagram</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="telegram">Telegram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="snapchat">Snapchat</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="goalHours"><i class="ri-target-line"></i> Daily Hour Limit:</label>
+                <input type="number" id="goalHours" step="0.1" min="0" placeholder="E.g., 1">
+            </div>
+            <div class="button-group">
+                <button onclick="setGoal()" class="action-btn"><i class="ri-check-line"></i> Set Goal</button>
+                <button onclick="deleteGoal()" class="action-btn"><i class="ri-close-line"></i> Delete Goal</button>
+            </div>
+            <div id="goalStatus" class="result-box"></div>
+            <div class="chart-container">
+                <canvas id="goalsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div id="stats" class="tab-content">
+            <div class="input-group">
+                <label for="periodFilter"><i class="ri-calendar-line"></i> Period:</label>
+                <select id="periodFilter" onchange="updateStats()">
+                    <option value="day">Day</option>
+                    <option value="week">Week</option>
+                    <option value="month">Month</option>
+                </select>
+            </div>
+            <div class="stats-grid" id="statsGrid"></div>
+            <div class="chart-container">
+                <button class="chart-toggle" onclick="toggleStatsChart('doughnut')"><i
+                        class="ri-donut-chart-line"></i></button>
+                <button class="chart-toggle" onclick="toggleStatsChart('bar')"><i
+                        class="ri-bar-chart-2-line"></i></button>
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Habits -->
+        <div id="habits" class="tab-content">
+            <div id="habitsReport" class="result-box"></div>
+            <div class="chart-container">
+                <canvas id="habitsChart"></canvas>
+            </div>
+            <div class="interactive-toggle-group">
+                <span class="interactive-toggle" onclick="toggleHabitsChartType('bar')"><i
+                        class="ri-bar-chart-line"></i> Bars</span>
+                <span class="interactive-toggle" onclick="toggleHabitsChartType('pie')"><i
+                        class="ri-pie-chart-line"></i> Pie</span>
+                <span class="interactive-toggle" onclick="toggleHabitsChartType('line')"><i
+                        class="ri-line-chart-line"></i> Line</span>
+            </div>
+        </div>
+
+        <!-- Advice -->
+        <div id="advice" class="tab-content advice-box">
+            <div id="adviceContent"></div>
+            <button onclick="generateDetailedAdvice()" class="action-btn"><i class="ri-file-info-line"></i> Detailed
+                Advice</button>
+            <button onclick="shareAdvice()" class="action-btn"><i class="ri-share-line"></i> Share</button>
+        </div>
+
+        <!-- Profile -->
+        <div id="profile" class="tab-content">
+            <h2><i class="ri-user-3-line"></i> Profile Information</h2>
+            <div class="input-group">
+                <label for="username"><i class="ri-account-circle-line"></i> Username:</label>
+                <input type="text" id="username" placeholder="Enter your name">
+            </div>
+            <div class="input-group">
+                <label for="email"><i class="ri-mail-line"></i> Email:</label>
+                <input type="email" id="email" placeholder="Enter your email">
+            </div>
+            <div class="input-group">
+                <label for="bio"><i class="ri-file-user-line"></i> Bio:</label>
+                <textarea id="bio" rows="4" placeholder="A short bio about you"></textarea>
+            </div>
+            <div class="button-group">
+                <button onclick="saveProfile()" class="action-btn"><i class="ri-save-line"></i> Save Changes</button>
+                <button onclick="clearProfile()" class="action-btn"><i class="ri-eraser-line"></i> Clear
+                    Profile</button>
+                <button onclick="showAchievements()" class="action-btn"><i class="ri-trophy-line"></i>
+                    Achievements</button>
+            </div>
+            <div id="profileStatus" class="result-box"></div>
+        </div>
+
+        <!-- Settings -->
+        <div id="settings" class="tab-content">
+            <div class="input-group">
+                <label for="fontSize"><i class="ri-font-size-2"></i> Font Size:</label>
+                <select id="fontSize" onchange="applySettings()">
+                    <option value="14px">Small</option>
+                    <option value="16px">Medium</option>
+                    <option value="18px">Large</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="theme"><i class="ri-contrast-line"></i> Theme:</label>
+                <select id="theme" onchange="applyTheme()">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="notifications"><i class="ri-notification-3-line"></i> Notifications:</label>
+                <select id="notifications" onchange="applySettings()">
+                    <option value="on">Enabled</option>
+                    <option value="off">Disabled</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button onclick="resetData()" class="action-btn"><i class="ri-restart-line"></i> Reset All Data</button>
+                <button onclick="exportData()" class="action-btn"><i class="ri-download-line"></i> Export Data</button>
+                <button onclick="importData()" class="action-btn"><i class="ri-upload-line"></i> Import Data</button>
+            </div>
+        </div>
+    </div>
+    <script src="./script.js"></script>
+</body>
+
+</html>
